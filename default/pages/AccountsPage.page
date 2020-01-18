@@ -1,0 +1,9 @@
+<apex:page controller="accController">
+ <apex:pageBlock title="Modified Accounts on Last 7 days" >
+ <apex:pageBlockSection >
+ <apex:pageBlockSectionItem >
+ <apex:outputText value="{!accCount}"></apex:outputText>
+ </apex:pageBlockSectionItem>
+ </apex:pageBlockSection>
+ </apex:pageBlock>
+</apex:page>

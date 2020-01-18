@@ -1,0 +1,177 @@
+<apex:page sidebar="false" Controller="salesData" id="page">
+
+    <apex:includeScript value="{!URLFOR($Resource.jquery, 'jquery-1.3.2.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jquery, 'jquery-ui-1.7.2.custom.min.js')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.jquery,'jquery-ui-1.7.2.custom.css')}"/>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    
+    <script type="text/javascript">    
+        //This will load as soon as the page is ready and will setup slider
+        $(document).ready(function(){
+                
+                //to setup slider
+                $("#slider-range").slider({ //This line creates a slider on the DIV specified, options are passed arguments,comma separated below
+                range: true,
+                min: 0, //Min value for slider
+                max: 400, //Max value for slider
+                values: [0,250], //initial values of slider
+                slide: function(event, ui){ //function to execute on slide event
+                
+                  document.getElementById('{!$Component.page.form.block.values.size_low}').value = ui.values[0]; //hidden fields to pass slider values to controller 
+                  document.getElementById('{!$Component.page.form.block.values.size_high}').value = ui.values[1];
+                  $("#amountValue").html(ui.values[0] + ' - ' + ui.values[1]); //display slider value as text
+                  
+                }
+                });
+                
+                //to display initial values of slider
+                $("#amountValue").html($("#slider-range").slider("values", 0) + ' - ' + $("#slider-range").slider("values", 1));
+                
+        
+        });
+        
+    </script>
+    <style>
+        #map_canvas {
+        font-family: Arial;
+        font-size:12px;
+        line-height:normal !important;
+        height:500px;
+        width:1000px;
+        background:transparent;
+        }
+    </style>
+                
+               
+     <apex:form id="form">
+         <apex:pageBlock mode="edit" id="block">
+               <apex:pageMessages />
+               
+               <apex:pageBlockSection columns="7" id="values" >
+                
+                  <apex:pageBlockSectionItem >
+                    <apex:outputlabel value="* Country"/>
+                    <apex:selectList value="{!country}" multiselect="false" required="true" size="1">
+                       <apex:selectOptions value="{!countries}"/>
+                    </apex:selectList>
+                 </apex:pageBlockSectionItem>
+                  
+                 <apex:pageBlockSectionItem >
+                   <apex:outputlabel value="State"/>
+                   <apex:inputtext value="{!state}"/> 
+                 </apex:pageBlockSectionItem>
+                  
+                 <apex:pageBlockSectionItem >  
+                   <apex:outputlabel value="City"/>
+                   <apex:inputtext value="{!city}"/> 
+                 </apex:pageBlockSectionItem>
+                  
+                 <apex:commandButton action="{! search}" value="Search" reRender="mymap" />  
+                  
+                 <!-- pass slider values -->
+                 <apex:inputhidden value="{!size_low}" id="size_low" /> 
+                 <apex:inputhidden value="{!size_high}" id="size_high" />
+                 <!-- pass address of clicked marker -->
+                 <apex:inputhidden value="{!addressParameter}" id="addressParameter" /> 
+                  
+               </apex:pageBlockSection>
+               
+               <apex:pageBlockSection title="Filter Results" columns="3">
+                     
+                     <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Size"/>
+                        <!-- This is where our slider will be -->
+                        <div id="slider-range" style="font-size: 90%; margin-top: 0.5em;"></div>
+                        <div id="amountValue" style="text-align: center;"></div>
+                     </apex:pageBlockSectionItem>
+                     
+                     <apex:pageBlockSectionItem >
+                        <apex:outputlabel value="Begining Year"/>
+                        <apex:selectList value="{!b_year}" multiselect="false" required="true" size="1">
+                           <apex:selectOptions value="{!years}"/>
+                        </apex:selectList>
+                     </apex:pageBlockSectionItem>
+                     
+                     <apex:pageBlockSectionItem >
+                        <apex:outputlabel value="End Year"/>
+                        <apex:selectList value="{!e_year}" multiselect="false" required="true" size="1">
+                           <apex:selectOptions value="{!years}"/>
+                        </apex:selectList>
+                     </apex:pageBlockSectionItem>
+                     
+                     <apex:pageBlockSectionItem >
+                        <apex:outputlabel value="Type"/>
+                        <apex:selectCheckboxes value="{!type}">
+                           <apex:selectOptions value="{!items}"/>
+                        </apex:selectCheckboxes>
+                     </apex:pageBlockSectionItem>
+                     
+               </apex:pageBlockSection>
+               
+          <apex:pageBlockSection columns="2">
+                <apex:outputpanel id="mymap">
+                  <div id="map_canvas"></div>
+                  
+                  <script type="text/javascript">
+                     
+                     var myOptions = {
+                            zoom:15,
+                            mapTypeControl: false,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                         };
+                     var geocoder = new google.maps.Geocoder();
+                     
+                    //create map
+                     var map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
+                 
+                    function putmarker(map,address,geocoder){
+                       geocoder.geocode( { address: address}, function(results, status) {
+                        if (status == google.maps.GeocoderStatus.OK && results.length) {
+                          if (status != google.maps.GeocoderStatus.ZERO_RESULTS) {
+      
+                              //center map
+                                map.setCenter(results[0].geometry.location);
+        
+                             //create marker
+                                var marker = new google.maps.Marker({
+                                  position: results[0].geometry.location,
+                                  map: map,
+                                  title:address
+                                });
+                  
+                             //add click listener on marker
+                               google.maps.event.addListener(marker, 'click', function() {
+                                  //change addressParameter on click
+                                    document.getElementById('{!$Component.page.form.block.values.addressParameter}').value=marker.title;
+                                    refreshData(); //to rerender rightpane containing sales data of a location(invokes action function)
+                         
+                               });
+                           }
+                        }
+                       })
+                     }
+                  </script>
+                 
+                  <apex:repeat value="{! salesAddress}" var="address">
+                      <script> putmarker(map,"{!address}",geocoder);</script>
+                  </apex:repeat>
+               
+                </apex:outputpanel>
+                
+                <apex:dataList value="{! Sales}" var="sale" id="dataView">
+                    <!-- extract Record Id(15 character long from begining) to make link and Text to display(from 20th character to end of string) --> 
+                    <!-- Instance is auto corrected by force.com if it is not ap1 -->
+                        <apex:outputLink value="{!'https://ap1.salesforce.com/'+left(sale,15)}" target="_blank">
+                            {!MID(sale,20,len(sale)-19)}
+                        </apex:outputLink>
+                 </apex:dataList>
+                
+          </apex:pageBlockSection>
+          
+         </apex:pageBlock>
+               <!-- Rerender Right pane on marker click -->
+               <apex:actionFunction name="refreshData" action="{!refreshData}" rerender="dataView"/>
+          
+     </apex:form>
+                 
+</apex:page>

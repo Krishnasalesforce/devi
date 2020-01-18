@@ -1,0 +1,445 @@
+<!-- apex:page>
+  Begin Default Content REMOVE THIS
+  <h1>Congratulations</h1>
+  This is your new Page
+  End Default Content REMOVE THIS 
+</apex:page> -->
+
+<apex:page >
+<apex:form >
+
+<script>
+var numericExpression = /^[0-9]+$/; 
+var monthArray = new Array(); 
+monthArray[1] = 31; 
+monthArray[2] = 28; 
+monthArray[3] = 31; 
+monthArray[4] = 30; 
+monthArray[5] = 31; 
+monthArray[6] = 30; 
+monthArray[7] = 31; 
+monthArray[8] = 31; 
+monthArray[9] = 30; 
+monthArray[10] = 31; 
+monthArray[11] = 30; 
+monthArray[12] = 31; 
+
+function getProfileVals() { 
+var returnArray = new Array(); 
+try { 
+var sql = sforce.connection.query("SELECT Id, Name FROM Profile ORDER BY Name"); 
+if (sql.getBoolean("done") && sql.size > 0) { 
+var records = sql.getArray("records"); 
+for (var a in records) { 
+returnArray[a] = new Array(); 
+returnArray[a].push(records[a].Id.substring(0,15),escapeHTML(records[a].Name)); 
+} 
+} else { 
+returnArray[0] = new Array(); 
+returnArray[0].push("noResults","noResults"); 
+} 
+} catch(err) { 
+returnArray[0] = new Array(); 
+returnArray[0].push("noResults","noResults"); 
+} 
+return returnArray; 
+} 
+
+function buildMultiPicklistHTML(array,id,dValue) { 
+if (!dValue) { 
+var tempArray = new Array("noneABC123"); 
+} else { 
+var tempArray = new Array(); 
+tempArray = dValue.split(";"); 
+} 
+var retHTML = "<div class=\"requiredBlock\"></div>"; 
+retHTML += "<table class=\"multiSelectPicklistTable\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">"; 
+retHTML += "<tr class=\"multiSelectPicklistRow\">"; 
+retHTML += "<td align=\"right\" bgcolor=\"#FFFFFF\"><span><select multiple=\"multiple\" id=\""+id+"_Aval\" name=\""+id+"_Aval\" size=\"6\">"; 
+retHTML += "<optgroup style=\"font-size: 9px; text-decoration: none;\" label=\"Available\"></optgroup>"; 
+var a; 
+for (a in array) { 
+var isDefaultInList = false; 
+var b; 
+for (b in tempArray) { 
+if (array[a][0] == tempArray[b]) { 
+isDefaultInList = true; 
+} 
+} 
+if (!isDefaultInList) { 
+retHTML += "<option value=\""+array[a][0]+"\">"+array[a][1]+"</option>"; 
+} 
+} 
+retHTML += "</select></span></td>"; 
+retHTML += "<td class=\"multiSelectPicklistCell\" bgcolor=\"#AAAAAA\"><img src=\"/img/arrow2_picklist_right.gif\" alt=\"Select\" title=\"Select\" width=\"17\" height=\"17\" align=\"texttop\" onclick=\"addValue('"+id+"');\" style=\"cursor:pointer;\"><br><br><img src=\"/img/arrow2_picklist_left.gif\" alt=\"Remove\" title=\"Remove\" width=\"17\" height=\"17\" align=\"texttop\" onclick=\"removeValue('"+id+"');\" style=\"cursor:pointer;\"></td>"; 
+retHTML += "<td bgcolor=\"#FFFFFF\"><span><select name=\""+id+"_Sel\" id=\""+id+"_Sel\" size=\"6\" multiple=\"multiple\">"; 
+retHTML += "<optgroup style=\"font-size: 9px; text-decoration: none;\" label=\"Selected\"></optgroup>"; 
+for (var d in array) { 
+for (var c in tempArray) { 
+if (tempArray[c] == array[d][0]) { 
+retHTML += "<option value=\""+tempArray[c]+"\">"+array[d][1]+"</option>"; 
+} 
+} 
+} 
+retHTML += "</select></span></td>"; 
+retHTML += "</tr>"; 
+retHTML += "</table>"; 
+return retHTML; 
+} 
+
+var singleSelect = true; 
+var sortSelect = true; 
+var sortPick = true; 
+
+function addValue(id) { 
+var selectList = document.getElementById(id+"_Aval"); 
+var selectIndex = selectList.selectedIndex; 
+var selectOptions = selectList.options; 
+var pickList = document.getElementById(id+"_Sel"); 
+var pickOptions = pickList.options; 
+var pickOLength = pickOptions.length; 
+while (selectIndex > -1) { 
+pickOptions[pickOLength] = new Option(selectList[selectIndex].text); 
+pickOptions[pickOLength].value = selectList[selectIndex].value; 
+if (singleSelect) { 
+selectOptions[selectIndex] = null; 
+} 
+if (sortPick) { 
+var tempText; 
+var tempValue; 
+while (pickOLength > 0 && pickOptions[pickOLength].text < pickOptions[pickOLength-1].text) { 
+tempText = pickOptions[pickOLength-1].text; 
+tempValue = pickOptions[pickOLength-1].value; 
+pickOptions[pickOLength-1].text = pickOptions[pickOLength].text; 
+pickOptions[pickOLength-1].value = pickOptions[pickOLength].value; 
+pickOptions[pickOLength].text = tempText; 
+pickOptions[pickOLength].value = tempValue; 
+pickOLength = pickOLength - 1; 
+} 
+} 
+selectIndex = selectList.selectedIndex; 
+pickOLength = pickOptions.length; 
+} 
+} 
+
+function removeValue(id) { 
+var selectList = document.getElementById(id+"_Aval"); 
+var selectOptions = selectList.options; 
+var selectOLength = selectOptions.length; 
+var pickList = document.getElementById(id+"_Sel"); 
+var pickIndex = pickList.selectedIndex; 
+var pickOptions = pickList.options; 
+while (pickIndex > -1) { 
+if (singleSelect) { 
+selectOptions[selectOLength] = new Option(pickList[pickIndex].text); 
+selectOptions[selectOLength].value = pickList[pickIndex].value; 
+} 
+pickOptions[pickIndex] = null; 
+if (singleSelect && sortSelect) { 
+var tempText; 
+var tempValue; 
+while (selectOLength > 0 && selectOptions[selectOLength].text < selectOptions[selectOLength-1].text) { 
+tempText = selectOptions[selectOLength-1].text; 
+tempValue = selectOptions[selectOLength-1].value; 
+selectOptions[selectOLength-1].text = selectOptions[selectOLength].text; 
+selectOptions[selectOLength-1].value = selectOptions[selectOLength].value; 
+selectOptions[selectOLength].text = tempText; 
+selectOptions[selectOLength].value = tempValue; 
+selectOLength = selectOLength - 1; 
+} 
+} 
+pickIndex = pickList.selectedIndex; 
+selectOLength = selectOptions.length; 
+} 
+} 
+
+function resizeFrame(minimum) { 
+var defaultHeight = 600; 
+if (minimum) { 
+defaultHeight = minimum*1; 
+} 
+var sframe = parent.document.getElementById("itarget"); 
+if (document.body.scrollHeight*1 < defaultHeight) { 
+sframe.style.height = defaultHeight+"px"; 
+} else { 
+if (navigator.userAgent.indexOf("Firefox") != -1) { 
+var nHeight = document.body.scrollHeight+10; 
+} else { 
+var nHeight = document.body.scrollHeight+15; 
+} 
+sframe.style.height = nHeight+"px"; 
+} 
+} 
+
+function daysInFebruary (year) { 
+return (((year % 4 == 0) && ( (!(year % 100 == 0)) || (year % 400 == 0))) ? 29 : 28 ); 
+} 
+
+function checkDate(val) { 
+var string = getDateValues(val); 
+var returnText = ""; 
+var tempArray = new Array(); 
+var tempArray = string.split("-"); 
+if (string == "0000-00-00") { 
+returnText = " should be in a '{!TODAY()}' format."; 
+} else if (tempArray[1] < 1 || tempArray[1] > 12) { 
+returnText = " should have a valid month."; 
+} else if (tempArray[2] < 1 || tempArray[2] > 31) { 
+returnText = " should have a valid day."; 
+} else if ((tempArray[1]*1 == 2 && tempArray[2] > daysInFebruary(tempArray[0])) || (tempArray[1]*1 != 2 && tempArray[2] > monthArray[tempArray[1]])) { 
+returnText = " should have a valid day."; 
+} else if (tempArray[0] == 0 || tempArray[0] < 1800 || tempArray[0] > 2200) { 
+returnText = " should have a valid year."; 
+} else { 
+returnText = ""; 
+} 
+return returnText; 
+} 
+
+//takes a date from a query result and formats it based on the format passed to the function 
+function displayDate(val) { 
+if (typeof(val) == "string") { //if a string 
+if (val.indexOf("/") != -1) { 
+var dateArray = new Array(); 
+dateArray = val.split("/"); 
+var year = dateArray[2]; 
+var month = dateArray[0]; 
+var day = dateArray[1]; 
+} else { 
+var year = val.substring(0,4); 
+var month = val.substring(5,7); 
+var day = val.substring(8,10); 
+} 
+} else { //query dates should always be strings but just in case we've got the code below 
+var thisDate = new Date(); //new date variable 
+thisDate = val; //asign passed val to date 
+var year = thisDate.getFullYear(); //get the four digit year 
+var day = thisDate.getDate(); //get the day 
+var month = thisDate.getMonth(); //get the month 
+month = month + 1; //increment the month because javascript is odd 
+if (month==13) { //this shouldn't happen but if the month becomes 13 
+month = 1; //change the month to 1 
+year = year + 1; //increment the year 
+} 
+} 
+//we need two digit month and day values (in case called for in display format) 
+if (month*1 < 10) { //if the month value is less than 10 
+var twoDigitMonth = "0"+(month*1); //prepend a 0 
+} else { //otherwise the month is two digits 
+var twoDigitMonth = month*1; //assign the month value to the two digit value too 
+} 
+if (day*1 < 10) { //if the day value is less than 10 
+var twoDigitDay = "0"+(day*1); //prepend a 0 
+} else { //otherwise the day is two digits 
+var twoDigitDay = day*1; //assign the day value to the two digit value too 
+} 
+var twoDigitYear = year.toString().substring(2,4); //two digit year (if needed) 
+month = month*1; 
+day = day*1; 
+//send the date back in the format requested 
+if (dateFormat == "d.M.y") { 
+return day+"."+month+"."+twoDigitYear; 
+} else if (dateFormat == "d.M.yyyy") { 
+return day+"."+month+"."+year; 
+} else if (dateFormat == "d.MM.yyyy") { 
+return day+"."+twoDigitMonth+"."+year; 
+} else if (dateFormat == "d/MM/yyyy") { 
+return day+"/"+twoDigitMonth+"/"+year; 
+} else if (dateFormat == "dd.MM.yyyy") { 
+return twoDigitDay+"."+twoDigitMonth+"."+year; 
+} else if (dateFormat == "dd/MM/yyyy") { 
+return twoDigitDay+"/"+twoDigitMonth+"/"+year; 
+} else if (dateFormat == "dd-MM-yyyy") { 
+return twoDigitDay+"-"+twoDigitMonth+"-"+year; 
+} else if (dateFormat == "d-M-yyyy") { 
+return day+"-"+month+"-"+year; 
+} else if (dateFormat == "d/M/yyyy") { 
+return day+"/"+month+"/"+year; 
+} else if (dateFormat == "MM-dd-yyyy") { 
+return twoDigitMonth+"-"+twoDigitDay+"-"+year; 
+} else if (dateFormat == "yyyy. M. d") { 
+return year+". "+month+". "+day; 
+} else if (dateFormat == "yyyy.d.M") { 
+return year+"."+day+"."+month; 
+} else if (dateFormat == "yyyy.M.d") { 
+return year+"."+month+"."+day; 
+} else if (dateFormat == "yyyy.MM.dd") { 
+return year+"."+twoDigitMonth+"."+twoDigitDay; 
+} else if (dateFormat == "yyyy.MM.dd.") { 
+return year+"."+twoDigitMonth+"."+twoDigitDay+"."; 
+} else if (dateFormat == "yyyy/M/d") { 
+return year+"/"+month+"/"+day; 
+} else if (dateFormat == "yyyy/MM/dd") { 
+return year+"/"+twoDigitMonth+"/"+twoDigitDay; 
+} else if (dateFormat == "yyyy-M-d") { 
+return year+"-"+month+"-"+day; 
+} else if (dateFormat == "yyyy-MM-dd") { 
+return year+"-"+twoDigitMonth+"-"+twoDigitDay; 
+} else { //otherwise use the default M/d/yyyy 
+return month+"/"+day+"/"+year; 
+} 
+} 
+
+function escapeHTML(val) { 
+var newVal = val.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;"); 
+return newVal; 
+} 
+
+function escapeHTML2(val) { 
+var newVal = val.replace(/<script/ig,"&lt;script").replace(/<\/script>/ig,"&lt;/script&gt;"); 
+return newVal; 
+} 
+
+function getUserDateFormat() { 
+var user = sforce.connection.getUserInfo(); //get information about the running user 
+var locale = user.userLocale; //assign the locale of the user to its own variable 
+if (locale == "sl_SI") { //if the locale is Slovenian (Slovenia) 
+dateFormat = "d.M.y"; 
+} else if (locale == "cs" || locale == "cs_CZ" || locale == "fi" || locale == "fi_FI" || locale == "fi_FI_EURO" || locale == "sk_SK") { //if the locale is Czech, Czech (Czech Republic), Finnish, Finnish (Finland), Finnish (Finland,Euro), or Slovak (Slovakia) 
+dateFormat = "d.M.yyyy"; 
+} else if (locale == "is_IS") { //if the locale is Icelandic (Iceland) 
+dateFormat = "d.M.yyyy"; 
+} else if (locale == "et_EE") { //if the locale is Estonian (Estonia) 
+dateFormat = "d.MM.yyyy"; 
+} else if (locale == "el_GR") { //if the locale is Greek (Greece) 
+dateFormat = "d/M/yyyy"; 
+} else if (locale == "th_TH") { //if the locale is Thai (Thailand) 
+dateFormat = "d/M/yyyy"; 
+} else if (locale == "nl_BE" || locale == "fr_BE" || locale == "es" || locale == "es_ES_EURO" || locale == "es_ES") { //if the locale is Dutch (Belgium), French (Belgium), Spanish, Spanish (Spain,Euro) or Spanish (Spain) 
+dateFormat = "d/MM/yyyy"; 
+} else if (locale == "en_AU" || locale == "en_NZ") { //if the locale is English (Australia) or English (New Zealand) 
+dateFormat = "d/MM/yyyy"; 
+} else if (locale == "es_CO" || locale == "es_GT" || locale == "es_MX") { //if the locale is Spanish (Colombia), Spanish (Guatemala) or Spanish (Mexico) 
+dateFormat = "d/MM/yyyy"; 
+} else if (locale == "ru") { //if the locale is Russian 
+dateFormat = "dd.MM.yyyy"; 
+} else if (locale == "fr_CH" || locale == "de" || locale == "de_AT" || locale == "de_AT_EURO" || locale == "de_DE" || locale == "de_DE_EURO" || locale == "de_LU" || locale == "de_LU_EURO" || locale == "de_CH" || locale == "it_CH" || locale == "no" || locale == "no_NO" || locale == "ro_RO" || locale == "tr") { //French (Switzerland), German, German (Austria), German (Austria,Euro), German (Germany), German (Germany,Euro), German (Luxembourg), German (Luxembourg,Euro), German (Switzerland), Italian (Switzerland), Norwegian, Norwegian (Norway), Romanian (Romania) or Turkish 
+dateFormat = "dd.MM.yyyy"; 
+} else if (locale == "it" || locale == "it_IT") { //if the locale is Italian or Italian (Italy) 
+dateFormat = "dd/MM/yyyy"; 
+} else if (locale == "en_CA" || locale == "ms_MY") { //if the locale is English (Canada) or Malay (Malaysia) 
+dateFormat = "dd/MM/yyyy"; 
+} else if (locale == "ca" || locale == "ca_ES" || locale == "ca_ES_EURO" || locale == "en_IE" || locale == "en_IE_EURO" || locale == "en_GB" || locale == "fr" || locale == "fr_FR" || locale == "fr_FR_EURO" || locale == "fr_LU" || locale == "fr_MC" || locale == "pt_BR" || locale == "es_AR") { //if the locale is Catalan, Catalan (Spain), Catalan (Spain,Euro), English (Ireland), English (Ireland,Euro), English (United Kingdom), French, French (France), French (France,Euro), French (Luxembourg), French (Monaco), Portuguese (Brazil) or Spanish (Argentina) 
+dateFormat = "dd/MM/yyyy"; 
+} else if (locale == "ar" || locale == "ar_BH" || locale == "ar_JO" || locale == "ar_KW" || locale == "ar_LB" || locale == "ar_SA" || locale == "ar_AE" || locale == "es_CR" || locale == "es_EC" || locale == "es_PY" || locale == "es_PE" || locale == "es_UY" || locale == "es_VE") { //if the locale is Arabic, Arabic (Bahrain), Arabic (Jordan), Arabic (Kuwait), Arabic (Lebanon), Arabic (Saudi Arabia), Arabic (United Arab Emirates), Spanish (Costa Rica), Spanish (Ecuador), Spanish (Paraguay), Spanish (Peru), Spanish (Uruguay) or Spanish (Venezuela) 
+dateFormat = "dd/MM/yyyy"; 
+} else if (locale == "iw" || locale == "iw_IL" || locale == "vi_VN") { //if the locale is Hebrew, Hebrew (Israel) or Vietnamese (Vietnam) 
+dateFormat = "dd/MM/yyyy"; 
+} else if (locale == "pt" || locale == "pt_AO" || locale == "pt_PT") { //if the locale is Portuguese, Portuguese (Angola) or Portuguese (Portugal) 
+dateFormat = "dd-MM-yyyy"; 
+} else if (locale == "da" || locale == "da_DK") { //if the locale is Danish or Danish (Denmark) 
+dateFormat = "dd-MM-yyyy"; 
+} else if (locale == "es_BO" || locale == "es_CL") { //if the locale is Spanish (Bolivia) or Spanish (Chile) 
+dateFormat = "dd-MM-yyyy"; 
+} else if (locale == "nl" || locale == "nl_NL" || locale == "nl_SR") { //if the locale is Dutch, Dutch (Netherlands) or Dutch (Suriname) 
+dateFormat = "d-M-yyyy"; 
+} else if (locale == "es_SV" || locale == "es_HN" || locale == "es_PR") { //if the locale is Spanish (El Salvador), Spanish (Honduras) or Spanish (Puerto Rico) 
+dateFormat = "MM-dd-yyyy"; 
+} else if (locale == "ko" || locale == "ko_KR") { //if the locale is Korean or Korean (South Korea) 
+dateFormat = "yyyy. M. d"; 
+} else if (locale == "lv_LV") { //if the locale is Latvian (Latvia) 
+dateFormat = "yyyy.d.M"; 
+} else if (locale == "lt_LT") { //if the locale is Lithuanian (Lithuania) 
+dateFormat = "yyyy.M.d"; 
+} else if (locale == "hr_HR") { //if the locale is Croatian (Croatia) 
+dateFormat = "yyyy.MM.dd"; 
+} else if (locale == "hu") { //if the locale is Hungarian 
+dateFormat = "yyyy.MM.dd."; 
+} else if (locale == "zh_TW") { //if the locale is Chinese (Taiwan) 
+dateFormat = "yyyy/M/d"; 
+} else if (locale == "ja" || locale == "ja_JP") { //if the locale is Japanese or Japanese (Japan) 
+dateFormat = "yyyy/MM/dd"; 
+} else if (locale == "en_ZA") { //if the locale is English (South Africa) 
+dateFormat = "yyyy/MM/dd"; 
+} else if (locale == "zh_HK" || locale == "zh" || locale == "zh_CN") { //if the locale is Chinese (Hong Kong), Chinese or Chinese (China) 
+dateFormat = "yyyy-M-d"; 
+} else if (locale == "bg_BG") { //if the locale is Bulgarian (Bulgaria) 
+dateFormat = "yyyy-M-d"; 
+} else if (locale == "fr_CA" || locale == "pl" || locale == "sv" || locale == "sv_SE") { //if the locale is French (Canada), Polish, Swedish or Swedish (Sweden) 
+dateFormat = "yyyy-MM-dd"; 
+} else { //otherwise the locale is Armenian (Armenia) [hy_AM], English (Barbados) [en_B], English (Bermuda) [en_BM], English (Ghana) [en_GH], English (Indonesia) [en_ID], English (Singapore) [en_SG], English (United States) [en_US], Kazakh (Kazakhstan) [kk_KZ], Khmer (Cambodia) [km_KH], Thai [th] or Urdu (Pakistan) [ur_PK] 
+dateFormat = "M/d/yyyy"; 
+} 
+return true; 
+} 
+
+function getDateValues(val) { 
+var year; 
+var month; 
+var day; 
+
+if (typeof(val) == "string") { //if a string 
+var dateArray = new Array(); //array to hold elements of our date 
+var isError = false; //holds the boolean for error checking 
+if (val.indexOf("/") != -1) { //if the val contains / 
+dateArray = val.split("/"); //split val into an array at each occurance of / 
+} else if (val.indexOf(".") != -1) { //if the val contains . 
+dateArray = val.split("."); //split val into an array at each occurance of . 
+} else if (val.indexOf("-") != -1) { //if the val contains - 
+dateArray = val.split("-"); //split val into an array at each occurance of - 
+} else { //otherwise there is something passed, which we didn't expect 
+isError = true; //inform the boolean 
+} 
+if (!isError) { 
+//look at the format passed and make sure we break the val appropriately 
+if (dateFormat == "d.M.y") { 
+day = dateArray[0]; 
+month = dateArray[1]; 
+year = dateArray[2]; 
+if (year*1 > 0 && year*1 < 10) { 
+year = "200"+(year*1); 
+} else if (year*1 >= 10 && year*1 <= 50) { 
+year = "20"+(year*1); 
+} else { 
+year = "19"+(year*1); 
+} 
+} else if (dateFormat == "d.M.yyyy" || dateFormat == "d.MM.yyyy" || dateFormat == "d/MM/yyyy" || dateFormat == "dd.MM.yyyy" || dateFormat == "dd/MM/yyyy" || dateFormat == "dd-MM-yyyy" || dateFormat == "d-M-yyyy" || dateFormat == "d/M/yyyy") { 
+day = dateArray[0]; 
+month = dateArray[1]; 
+year = dateArray[2]; 
+} else if (dateFormat == "yyyy. M. d") { 
+day = dateArray[2].replace(/[ ]/gi,""); 
+month = dateArray[1].replace(/[ ]/gi,""); 
+year = dateArray[0]; 
+} else if (dateFormat == "yyyy.d.M") { 
+day = dateArray[1]; 
+month = dateArray[2]; 
+year = dateArray[0]; 
+} else if (dateFormat == "yyyy.M.d" || dateFormat == "yyyy.MM.dd" || dateFormat == "yyyy.MM.dd." || dateFormat == "yyyy/M/d" || dateFormat == "yyyy/MM/dd" || dateFormat == "yyyy-M-d" || dateFormat == "yyyy-MM-dd") { 
+day = dateArray[2]; 
+month = dateArray[1]; 
+year = dateArray[0]; 
+} else { //otherwise M/d/yyyy or MM-dd-yyyy 
+day = dateArray[1]; 
+month = dateArray[0]; 
+year = dateArray[2]; 
+} 
+} else { 
+day = "0000"; 
+month = "00"; 
+year = "00"; 
+} 
+} else { //query dates should always be strings but just in case we've got the code below 
+var thisDate = new Date(); //new date variable 
+thisDate = val; //asign passed val to date 
+year = thisDate.getFullYear(); //get the four digit year 
+day = thisDate.getDate(); //get the day 
+month = thisDate.getMonth(); //get the month 
+month = month + 1; //increment the month because javascript is odd 
+if (month==13) { //this shouldn't happen but if the month becomes 13 
+month = 1; //change the month to 1 
+year = year + 1; //increment the year 
+} 
+} 
+if (month*1 < 10) { //if the month value is less than 10 
+month = "0"+(month*1); //prepend a 0 
+} 
+if (day*1 < 10) { //if the day value is less than 10 
+day = "0"+(day*1); //prepend a 0 
+} 
+return year+"-"+month+"-"+day; //YYYY-MM-DD format for date literals 
+}
+</script>
+
+</apex:form>
+</apex:page>

@@ -1,0 +1,311 @@
+<!-- <apex:page>
+  Begin Default Content REMOVE THIS
+  <h1>Congratulations</h1>
+  This is your new Page
+  End Default Content REMOVE THIS
+</apex:page> -->
+
+<apex:page sidebar="false" showHeader="false">
+<apex:form >
+
+<html> 
+<head> 
+<title>Messages: Help</title> 
+<!-- 
+Created by: Greg Hacic 
+Last Update: November 1, 2008 
+Questions?: http://www.interactiveties.com/contact.php 
+Copyright (c) 2008 Interactive Ties LLC 
+
+NOTES: 
+Help window for Messages Application. 
+--> 
+<style media="all" type="text/css"> 
+body {font-family: Arial, Helvetica, Verdana, sans-serif; font-size: 85%; margin: 5px; background-color: #FFF;} 
+#logo {float: left; font-size: 85%;} 
+#logo img {vertical-align: middle;} 
+#welcome {float: right; font-size: 85%; padding: 10px; text-align: right;} 
+table {font-size: 100%;} 
+a {color: #333; text-decoration: underline;} 
+a:hover {color: #369; text-decoration: underline;} 
+p {font-size: 90%; font-weight: normal; margin: 1em 0 0 0;} 
+div.p, .p {font-size: 90%; font-weight: normal; padding-top: 1em;} 
+li div.p, li .p {font-size: 100%; font-weight: normal; padding-top: 1em;} 
+ul, ol {margin: 0 0 0 1em; padding-top: 0; padding-left: 0;} 
+ol li {margin-left: 1em; line-height: 1.2em; padding: 6px 0 0 0; list-style-type: decimal;} 
+ul ol li {list-style-type: decimal;} 
+ol ol li {list-style-type: lower-alpha;} 
+ol li ul li {list-style-type: circle;} 
+ul li {list-style-type: square; margin-left: 1em; line-height: 1.2em; padding: 6px 0 0 0;} 
+li {margin-top: .1em; padding-top: .1em;} 
+li p {font-size: 100%; margin: 0; padding: 0; padding-top: 6px;} 
+li div.p + * {padding-top: 1em;} 
+li li {font-size: 100%;} 
+.spacer {background-color: #737E96; font-size: 5px;} 
+.mTreeSelection {background-color:#E8E8E8; font-size: 85%; padding: 0.80em; text-align: left; vertical-align: top; width: 200px;} 
+.mTreeSelection .helpTreeHeading {font-weight:bold;} 
+.mTreeSelection .treeLine {background-color:#333; height:1px; margin-top: 0.33em; margin-bottom: 0.69em; font-size:0px;} 
+.mTreeSelection .treeIndent {margin-left: 2em;} 
+.mTreeSelection .setupLeaf, .mTreeSelection .setupHighlightLeaf {padding-bottom: 2px;} 
+.mTreeSelection .setupHighlightLeaf {background-color:#fff; margin-left: 0.5em;} 
+.mTreeSelection .setupSection {font-weight: bold;} 
+.mTreeSelection .setupHighlightLeaf a, .mTreeSelection .setupHighlightFolder, .mTreeSelection .setupLeaf a, .mTreeSelection .setupFolder, .mTreeSelection .setupSection {text-decoration: none;} 
+.mTreeSelection .setupLeaf {margin-left: 0.5em;} 
+.mTreeSelection a:hover {text-decoration: underline;} 
+.content {padding: 0px 0px 3px 3px; vertical-align: top;} 
+h1, .helpHead1, supportHead1 {font-weight: bold; font-size: 120%; color: #FFF; background-color: #737E96; padding: .7em 8px; margin: 0;} 
+h2, .helpHead2, supportHead2 {font-weight: bold; font-size: 100%; color: #51638A; line-height: 1.2em; padding: 0 0 1px 0; margin: 1.2em 0 .3em 0; border-bottom: 1px solid #51638A;} 
+h2 p, .helpHead2 p, supportHead2 p {margin-top: 0; padding-top: 0;} 
+dl {margin: 0;} 
+dl dl {font-size: 100%; margin-left: 12px;} 
+dl dl dd {margin: 0; padding-bottom: 0;} 
+dl dl dd, dl dl .dlterm {font-size: 100%;} 
+dt.dlterm {margin: 8px 0 0 0; font-size: 90%; font-weight: bold; color: #000000;} 
+dt {font-size: 90%;} 
+dd {margin: 0.5ex 0ex 0ex 2ex; font-size: 90%;} 
+div.p ol dd, div.p ul dd {font-size: 100%;} 
+dd p {margin: 0; font-size: 100%;} 
+legend {color: #333; font-size: 100%; font-weight: bold; margin: 0 2px;} 
+.note {font-size: 90%; border: 1px solid #8E9CBD; margin: 10px 0 10px 0;} 
+.note .noteBody {margin: 0 8px 8px 10px;} 
+.noteBody p {font-size: 100%; margin-top: 6px;} 
+li .note {font-size: 100%;} 
+li .note .noteBody {font-size: 100%;} 
+</style> 
+<script language="JavaScript" type="text/javascript"> 
+ 
+function clickTo(dest) { 
+var navArray = new Array("introduction","concepts","setup","home_screen_overview","home_screen_navigation","maintenance_overview","maintenance_new","maintenance_edit","maintenance_clone","maintenance_delete"); 
+if (!dest) { 
+dest = "Introduction"; 
+} 
+dest = dest.toLowerCase(); 
+dest = dest.replace(/ /g,"_"); 
+for (var a in navArray) { 
+document.getElementById(navArray[a]).className = "setupLeaf"; 
+document.getElementById("content_"+navArray[a]).style.display = "none"; 
+} 
+document.getElementById(dest).className = "setupHighlightLeaf"; 
+document.getElementById("content_"+dest).style.display = ""; 
+window.scrollTo(0,0); 
+} 
+//
+</script> 
+</head> 
+
+<body> 
+<table border="0" cellpadding="0" cellspacing="0" width="100%"> 
+<tr> 
+  <td><div id="logo"><img src="/servlet/servlet.FileDownload?file=01570000000d6Kc" width="120" height="40" alt="Home Tab Messages by Interactive Ties, LLC" border="0">&nbsp;<strong> Help</strong></div><div id="welcome">Welcome <strong>{!$User.FirstName} {!$User.LastName}</strong> at <strong>{!$Organization.Name}</strong></div></td>
+</tr> 
+</table> 
+<table border="0" cellpadding="0" cellspacing="0" width="100%"> 
+<tr><td colspan="99" style="padding-bottom: 3px;"><div class="spacer">&nbsp;</div></td></tr> 
+<tr> 
+<td class="mTreeSelection" width="200"> 
+<div class="helpTreeHeading">Introduction</div> 
+<div class="treeLine"></div> 
+<div class="setupFolder">&nbsp;<span class="setupSection">Overview</span> 
+<div class="treeIndent"> 
+<div class="setupHighlightLeaf" id="introduction"><a href="JavaScript: clickTo('Introduction');">Introduction</a></div> 
+<div class="setupLeaf" id="concepts"><a href="JavaScript: clickTo('Concepts');">Concepts</a></div> 
+<div class="setupLeaf" id="setup"><a href="JavaScript: clickTo('Setup');">Setup</a></div> 
+</div> 
+</div> 
+<div>&nbsp;</div> 
+<div class="helpTreeHeading">Using The Application</div> 
+<div class="treeLine"></div> 
+<div class="setupFolder">&nbsp;<span class="setupSection">Home Page</span> 
+<div class="treeIndent"> 
+<div class="setupLeaf" id="home_screen_overview"><a href="JavaScript: clickTo('Home Screen Overview');">Overview</a></div> 
+<div class="setupLeaf" id="home_screen_navigation"><a href="JavaScript: clickTo('Home Screen Navigation');">Navigation</a></div> 
+</div> 
+</div> 
+<div class="setupFolder">&nbsp;<span class="setupSection">Maintenance</span> 
+<div class="treeIndent"> 
+<div class="setupLeaf" id="maintenance_overview"><a href="JavaScript: clickTo('Maintenance Overview');">Overview</a></div> 
+<div class="setupLeaf" id="maintenance_new"><a href="JavaScript: clickTo('Maintenance New');">Creating</a></div> 
+<div class="setupLeaf" id="maintenance_edit"><a href="JavaScript: clickTo('Maintenance Edit');">Editing</a></div> 
+<div class="setupLeaf" id="maintenance_clone"><a href="JavaScript: clickTo('Maintenance Clone');">Cloning</a></div> 
+<div class="setupLeaf" id="maintenance_delete"><a href="JavaScript: clickTo('Maintenance Delete');">Deleting</a></div> 
+</div> 
+</div> 
+</td> 
+<td class="content"> 
+<div id="content_introduction" style="display: ;"> 
+<h1 class="helpHead1">Introduction</h1> 
+<p><strong>Home Tab Messages</strong> enables company-wide messaging on the Home tab. Includes HTML editor and ability to post by Salesforce profile so the right message is displayed to the right users. With <strong>Home Tab Messages</strong>, you can:</p> 
+<div class="p"> 
+<ul> 
+<li>Take advantage of efficiencies gained by utilizing Salesforce and limit Email messaging disruptions by displaying messages to users on their Salesforce Home tab.</li> 
+<li>Display only messages that are relevant to your users. <strong>Home Tab Messages</strong> allows you to provide different messaging based on the Profile of your Salesforce users.</li> 
+<li>Eliminate the need for constant maintenance of your messages. Users have the ability to remove the messages displayed on their home tab. The unique capabilities of <strong>Home Tab Messages</strong> allow for messages to be widely broadcast but individually removed after the user has read the message itself.</li> 
+</ul> 
+</div> 
+<p>Let <strong>Home Tab Messages</strong> free you and your company from Email clutter and open the door to company-wide messaging that can be tailored to specific Salesforce Profiles.</p> 
+<div class="section"><h2 class="helpHead2">Additional Features</h2></div> 
+<div class="p">Some additional features of <strong>Home Tab Messages</strong>: 
+<ul> 
+<li>Rich text editor to allow for markup and HTML editing to enhance message listings.</li> 
+<li>Administrators can filter the maintenance Message listing to show All, Active & Inactive messages - allowing for quick and easy updates.</li> 
+<li>Messages can be setup with an expiration date - allowing messages to auto-expire without manual intervention from an admin.</li> 
+<li>Messages can be setup so that they are always visible - preventing any user from removing the message from their personal listing and ensuring important messages are constantly visible.</li> 
+<li>Messages can be forward dated - allowing for messaging to be created for future dates but not visible until the desired date has arrived.</li> 
+<li>Users have the ability to see messages they previously deleted.</li> 
+<li>Users have the ability to "undelete" messages they previously deleted.</li> 
+<li>Reporting to illustrate all users that have opted out of a specific message listing.</li> 
+</ul> 
+</div> 
+<p>&nbsp;</p> 
+</div> 
+<div id="content_concepts" style="display: none;"> 
+<h1 class="helpHead1">Concepts</h1> 
+<p>Review the following terminology used in <strong>Home Tab Messages</strong>:</p> 
+<dl> 
+<dt class="dlterm">Manage Home Page Messages</dt> 
+<dd>A checkbox field added to user records which denotes whether or not the user has the ability to create, edit or delete messages displayed in the application. This field can only be updated by Salesforce administrators - users with the "Manage users" permission on their Profile.</dd> 
+<dt class="dlterm">Opt Out Report</dt> 
+<dd>A custom report which lists all of the users that have removed a specific message listing from their Home tab. The report can only be accessed from the Message detail page.</dd> 
+<dt class="dlterm">Running user</dt> 
+<dd>The person logged into Salesforce and accessing the application. Due to variations in the way each user is setup, <strong>Home Tab Messages</strong> can look different to each user.</dd> 
+</dl> 
+<div style="padding: 50px;">&nbsp;</div> 
+</div> 
+<div id="content_setup" style="display: none;"> 
+<h1 class="helpHead1">Setting Up the Application</h1> 
+<p>Once you have installed <strong>Home Tab Messages</strong>, you will need to:</p> 
+<div class="p"> 
+<ol> 
+<li><a href="#setupusers">Update users that are authorized to maintain <strong>Home Tab Messages</strong>.</a></li> 
+<li><a href="#setupHome">Add the <strong>Messages</strong> component to your Home Page layout</a></li> 
+<li>Create messages for your users</li> 
+</ol> 
+</div> 
+<div class="section"><a name="setupusers"><!-- --></a><h2 class="helpHead2">Authorize Admins to Manage the Application</h2></div> 
+<div class="p"> 
+<ol> 
+<li>Click <strong>Setup</strong> in the upper right-hand corner of Salesforce</li> 
+<li>Click <strong>Manage Users</strong> under the "Administration Setup" heading on the left-hand side</li> 
+<li>Click <strong>Users</strong></li> 
+<li>From this screen you can edit the "Manage Home Page Messages" value for each user in your organization</li> 
+</ol> 
+</div> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">The ability to manage <strong>Home Tab Messages</strong> should be limited to only a select few users. This will keep messaging consistent and prevent any user confusion when the application is rolled out.</div></fieldset> 
+<div class="section"><a name="setupHome"><!-- --></a><h2 class="helpHead2">Update the Home Page Layout</h2></div> 
+<p><strong>Home Tab Messages</strong> is simply a Home Page component that needs to be added to the Page Layout for your Organization.</p> 
+<div class="p"> 
+<ol> 
+<li>Click <strong>Setup</strong> in the upper right-hand corner of Salesforce</li> 
+<li>Click <strong>Customize</strong> under the "App Setup" heading on the left-hand side</li> 
+<li>Click <strong>Home</strong></li> 
+<li>Click <strong>Home Page Layouts</strong></li> 
+<li>The page will display all the Page Layouts for the Home tab - click the <strong>Edit</strong> located on the left-hand side of the Home Page Layout name.</li> 
+<li>Check the box next to <strong>Messages</strong> under the section of the page reading "Select Wide Components to Show"</li> 
+<li>Click <strong>Next</strong></li> 
+<li>Use the selectors to move the <strong>Messages</strong> component to the top of the page or into whatever order makes sense for the page layout</li> 
+<li>Click <strong>Save</strong></li> 
+</ol> 
+</div> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">If your organization uses multiple page layouts for the Home tab you may have to repeat the above steps for each page layout.</div></fieldset> 
+<p>&nbsp;</p> 
+</div> 
+<div id="content_home_screen_overview" style="display: none;"> 
+<h1 class="helpHead1">Overview</h1> 
+<p><strong>Home Tab Messages</strong> is simply a component of the Home Page Layout.</p> 
+<p>All users will see a section of the page labeled "Messages" and when messages are added to the application users will see that the section of the page is broken into columns identifying the date, title and link to remove the message from the listing.</p> 
+<p>Users with the "Manage Home Page Messages" permission will see a button reading "Maintenance" which all other users will not be able to see.</p> 
+<p>By clicking on the Title of the message the page will expand or collapse to display or hide the actual message contents.</p> 
+<p>The "Delete" link located next to each message can be used to remove the message from the listing for each individual user.</p> 
+<p>The picklist located in the upper right-hand corner of the message listing on the Home tab will allow all users to see messages that have not yet been deleted and those that have been deleted. Users have the option of "undeleting" a message by simply clicking a button.</p> 
+<p>&nbsp;</p> 
+</div> 
+<div id="content_home_screen_navigation" style="display: none;"> 
+<h1 class="helpHead1">Navigation</h1> 
+<p>For general users the navigation of <strong>Home Tab Messages</strong> is very straightforward. The message listing is dynamically made available by the Admin of the application and messages are visible based on the running users' Profile.</p> 
+<div class="p">The standard layout includes: 
+<ul> 
+<li><strong>Date</strong> - indicates the date for which the message is applicable.</li> 
+<li><strong>Title</strong> - a text field containing up to 80 characters which provides a quick summary of the message contents. Clicking the title opens a section containing the message contents.</li> 
+<li><strong>Contents</strong> - actual messaging available to the user. This field is only accessible by clicking the title and can be hidden when the title is clicked a second time.</li> 
+<li><strong>Delete</strong> - link for removing the message from the listing for the Running User. Clicking this link will prompt the user to confirm the removal of the message. Removal of each message is done on an individual by indivdual basis unless an Admin deactivates or deletes the message globally.</li> 
+</ul> 
+</div> 
+<div class="section"><h2>Expanding &amp; Collapsing Message Contents</h2></div> 
+<p>By default, each message will only show the date and title when the page is first accessed.</p> 
+<p>Clicking the title text will display the message contents and expand the message area on the page.</p> 
+<p>To minimize the message contents simply click that same title text and the message area should resolve to the original size.</p> 
+<div class="section"><h2>Removing the Message from the Listing</h2></div> 
+<p>Each user will have the authority to remove any visible message from the listing.</p> 
+<!--<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">users with the "Manage Home Page Messages" permission are not authorized to remove individual messages from their personal listing. This is done to ensure that these users are properly maintaining the number of available messages using the <strong>Message</strong> maintenance screens and keeping content up-to-date.</div></fieldset>--> 
+<p>To remove a message from the listing the user can simply click the "Delete" link located on the right-hand side of any message title. Upon click the user will be asked to confirm the removal of the message from the listing and, if confirmed, the page will refresh with the message no longer visible to that Running User.</p> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">Unless removed by an Admin each message can only removed on a user by user basis and must be done by the Running User.</div></fieldset> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">Users can see all deleted messages by selecting the "Deleted" option from the picklist on the Home tab listing.</div></fieldset> 
+<p>&nbsp;</p> 
+</div> 
+<div id="content_maintenance_overview" style="display: none;"> 
+<h1 class="helpHead1">Overview</h1> 
+<p>Global <strong>Message</strong> maintenance can only be performed by an Admin user (user with the "Manage Home Page Messages" permission checked). Since messages can be deactivated on an individual user basis, it is not mandatory that message maintenance be performed daily. However, due to the fact that the message listing can get outdated over time, it is recommended that Admins take the time to periodically delete or deactivate messages older than 30 days.</p> 
+<div class="p">Some common types of messages might include: 
+<ul> 
+<li>Salesforce Data Updates</li> 
+<li>Internal Server Downtime</li> 
+<li>Company Holiday Notifications</li> 
+<li>Company Hiring/Firing Updates</li> 
+<li>General Company Reminders</li> 
+</ul> 
+</div> 
+<p>Messages are date driven so the most recent messages will be displayed at the top of the list and the older messages will be displayed at the bottom.</p> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">Message contents can contain over 20,000 characters and can be formatted using general markup such as HTML. However, proper testing must be done to ensure HTML markup provides the desired look/feel based upon browser differences.</div></fieldset> 
+<p>&nbsp;</p> 
+</div> 
+<div id="content_maintenance_new" style="display: none;"> 
+<h1 class="helpHead1">Creating a Message</h1> 
+<p>Messages can be created from the <strong>Message</strong> maintenance page. To access this page simply click the <strong>Home</strong> tab and then the button reading <strong>Maintenance</strong> located within the <strong>Messages</strong> section of the Home page.</p> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">The "Maintenance" button is only available to those users with the "Manage Home Page Messages" permission on their user record. This permission can only be granted by a Salesforce Administrator with the "Manage Users" authority granted on their Profile.</div></fieldset> 
+<p>Click the <strong>New</strong> button to get to the message creation screen. The following fields are available:</p> 
+<div class="p"> 
+<ul> 
+<li><strong>Active</strong>: denotes whether the message is visible to users. When Active is checked the message is available to users and when unchecked the message is not available.</li> 
+<li><strong>Always Visible</strong>: denotes whether the message can be removed by each individual user. When checked the message will <strong>always</strong> be displayed as long as the message is Active.</li> 
+<li><strong>Contents</strong>: a required field which is the actual messaging for the user. This field is visible to users and can contain special characters such as HTML markup. This field can contain up to 20,000 characters.</li> 
+<li><strong>Effective Date</strong>: a required field which indicates the date for which the message is applicable. The <strong>Message</strong> listing is organized in descending order by this date. If a message contains a future effective date then it will not be visible to your users until that date has passed.</li> 
+<li><strong>Expiration Date</strong>: indicates the date when the message should be deactivated. When this date is provided the application will automatically uncheck the Active flag on the message - making the message unavailable to all users after the date specified.</li> 
+<li><strong>Title</strong>: a required field which is the message headline. This field is visible to users and should be descriptive of the message contents but short. This field can only contain up to 80 characters.</li> 
+<li><strong>Visibility (by Profile)</strong>: a required field which allows the message to be associated to many Salesforce User Profiles. Only the selected Profiles will be allowed to view the message once saved. However, this Profile association can be edited later (if needed).</li> 
+</ul> 
+</div> 
+<p>&nbsp;</p> 
+</div> 
+<div id="content_maintenance_edit" style="display: none;"> 
+<h1 class="helpHead1">Editing a Message</h1> 
+<p>Messages can only be updated from the <strong>Message</strong> Listing page or <strong>Message</strong> Detail page. To access the <strong>Message</strong> Listing page simply click the <strong>Home</strong> tab and then the button reading <strong>Maintenance</strong> located within the "Messages" section of the Home page.</p> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">The "Maintenance" button is only available to those users with the "Manage Home Page Messages" permission on their user record. This permission can only be granted by a Salesforce Administrator with the "Manage Users" authority granted on their Profile.</div></fieldset> 
+<p>To update message details simply click the <strong>Edit</strong> link located on the left-hand side of the message date and then change the details that require updating. When finished, click <strong>Save</strong>.</p> 
+<p>All message fields can be edited but changes are visible to your end users in real-time so be considerate when making updates.</p> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">Users that have removed the message from their individual listing will not be able to see message updates so be concsious of this fact when creating/updating messages.</div></fieldset> 
+<p>&nbsp;</p> 
+</div> 
+<div id="content_maintenance_clone" style="display: none;"> 
+<h1 class="helpHead1">Cloning a Message</h1> 
+<p>Messages can only be cloned from the <strong>Message</strong> Detail page. To access the <strong>Message</strong> Detail page simply click the <strong>Home</strong> tab, then the button reading <strong>Maintenance</strong> located within the "Messages" section of the Home page, and then click the <strong>View</strong> link located on the left-hand side of the message you wish to clone.</p> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">The "Maintenance" button is only available to those users with the "Manage Home Page Messages" permission on their user record. This permission can only be granted by a Salesforce Administrator with the "Manage Users" authority granted on their Profile.</div></fieldset> 
+<p>All message fields will be populated with the information of the cloned message - make any necessary modifications. When finished, click <strong>Save</strong>.</p> 
+<div style="padding: 50px;">&nbsp;</div> 
+</div> 
+<div id="content_maintenance_delete" style="display: none;"> 
+<h1 class="helpHead1">Deleting a Message</h1> 
+<p>Messages can only be deleted from the <strong>Message</strong> Listing page or <strong>Message</strong> Detail page. To access the <strong>Message</strong> Listing page simply click the <strong>Home</strong> tab and then the button reading <strong>Maintenance</strong> located within the "Messages" section of the Home page.</p> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">The "Maintenance" button is only available to those users with the "Manage Home Page Messages" permission on their user record. This permission can only be granted by a Salesforce Administrator with the "Manage Users" authority granted on their Profile.</div></fieldset> 
+<p>To delete the message simply click the <strong>Del</strong> link located on the left-hand side of the message date if on the <strong>Message</strong> Listing page or the <strong>Delete</strong> button located at the top of the <strong>Message</strong> Detail page.</p> 
+<p>Upon click of the <strong>Del</strong> link or <strong>Delete</strong> button you will be asked to confirm the deletion.</p> 
+<fieldset class="note"><legend>Note </legend><div class="noteBody"><img src="/img/help/helpNote_icon.gif" align="left">Deleted messages follow the same rules as all other deleted records and will be moved to the Recycle Bin until permanently deleted from Salesforce.</div></fieldset> 
+<p>&nbsp;</p> 
+</div> 
+</td> 
+</tr> 
+</table> 
+</body> 
+</html>
+
+</apex:form>
+</apex:page>

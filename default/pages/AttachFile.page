@@ -1,0 +1,21 @@
+<apex:page controller="cls_VFAttachFile">   
+    <apex:form id="theForm" forceSSL="true">
+      <apex:PageBlock >
+      <apex:pageBlockButtons >
+          <apex:commandButton action="{!SaveFile}" value="save" id="com2"/>
+      </apex:pageBlockButtons>
+      <apex:pageBlockSection title="Attach File"> 
+    <apex:pageBlockSectionItem >
+        <apex:outputLabel Id="AttachFile" value="Attach File"></apex:outputLabel>
+        <apex:inputFile id="f1" value="{!docBlob}" />
+    </apex:pageBlockSectionItem>
+</br>
+     <apex:pageBlockSectionItem >
+        <apex:outputLabel Id="FileName" value="File Name"></apex:outputLabel>
+       <apex:inputText id="c1" value="{!filename}" />
+    </apex:pageBlockSectionItem>
+    </apex:PageBlockSection>
+     </apex:PageBlock>
+    </apex:form>
+<!--  <apex:listViews type="document" /> -->
+ </apex:page>

@@ -1,0 +1,576 @@
+<!-- <apex:page>
+   Begin Default Content REMOVE THIS 
+     <h1>Congratulations</h1>
+  This is your new Page
+   End Default Content REMOVE THIS </apex:page> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">  -->
+
+<apex:page >
+<apex:form >
+
+<iframe onmouseout="hideFrame(this)" scrolling="no" width="250" height="180" id="colorPicker" title="Color Picker" src="/email/wysiwyg/color.html" style="visibility:hidden; position: absolute; z-index: 50"></iframe> 
+
+<script> 
+var editorParamNames = new Array(); 
+function getContainerName(parameterName) 
+{ 
+return 'container_' + parameterName; 
+} 
+function getIframeName(parameterName) 
+{ 
+return 'iframe_' + parameterName; 
+} 
+
+function edit_single_on(parameterName) { 
+var containerName = getContainerName(parameterName); 
+var iframeName = getIframeName(parameterName); 
+if (!document.getElementById(containerName)) { 
+return; 
+} 
+
+if (!document.getElementById(parameterName)) { 
+return; 
+} 
+
+var container = document.getElementById(containerName); 
+container.innerHTML = "<iframe title=\"HTML Body\" src=\"/email/wysiwyg/richtextbody.jsp\" id=\"" + iframeName + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" marginwidth=\"2\" marginheight=\"2\"></iframe>"; 
+timedEditorOpen(parameterName, iframeName); 
+editorParamNames[editorParamNames.length] = parameterName; 
+modes[parameterName] = "html"; 
+} 
+
+//this was added because Safari 3 for Windows needs time to build the iframe 
+function timedEditorOpen(parameterName, iframeName) { 
+if(!isIE) 
+var editorDoc = document.getElementById(iframeName).contentDocument; 
+else 
+var editorDoc = document.getElementById(iframeName).contentWindow.document; 
+
+if(!editorDoc) { 
+setTimeout(function () {timedEditorOpen(parameterName, iframeName)}, 10); 
+return; 
+} 
+
+if(!isIE && !isSafari) { 
+//setting the timeout allows the page to respond correctly 
+setTimeout( function() { editorDoc.designMode = "on"; }, 50 ); 
+//editorDoc.designMode = 'on'; 
+} 
+editorDoc.open(); 
+editorDoc.write('<html><body bgcolor="#FFFFFF" marginwidth="2" marginheight="2" style="font-family:Arial;font-size:10pt;color:000000">'); 
+editorDoc.write(document.getElementById(parameterName).value); 
+editorDoc.write('</body></html>'); 
+editorDoc.close(); 
+editorDoc.body.contentEditable = 'true'; 
+} 
+
+function getRichTextValues() { 
+for (var i = 0; i < editorParamNames.length; i++) { 
+var parameterName = editorParamNames[i]; 
+var theParameter = document.getElementById(parameterName); 
+if (theParameter) { 
+setCurrentParamName(parameterName); 
+if (!isModeHtml()) { 
+switchMode(); 
+} 
+var iframeName = getIframeName(parameterName); 
+var theIframe = document.getElementById(iframeName); 
+if (theIframe) { 
+var innerVal = theIframe.contentWindow.document.body.innerHTML; 
+theParameter.value = innerVal; 
+} 
+} 
+} 
+} 
+
+function getInnerHTMLContainer(parameterName) { 
+var theParameter = document.getElementById(parameterName); 
+if (theParameter) { 
+var iframeName = getIframeName(parameterName); 
+var theIframe = document.getElementById(iframeName); 
+if (theIframe) { 
+return theIframe.contentWindow.document.body; 
+} 
+} 
+return null; 
+} 
+</script> 
+<script> 
+var imageURL = "/widg/filepicker_fs.jsp?lktp=015&otype=1&fpimg=1&maxImgSize=102400"; 
+var secureImageURL = "/widg/filepicker_fs.jsp?lktp=015&otype=1&maxImgSize=102400"; 
+
+/* For email template editing */ 
+var editFrameName = null; 
+function registerEditFrameName(name) { 
+editFrameName = name; 
+} 
+
+var tableFrame = null; 
+function registerTableFrame(obj) { 
+tableFrame = obj; 
+} 
+var controlForm = null; 
+function registerControlForm(f) { 
+controlForm = f; 
+} 
+
+var currentParamName = null; 
+function setCurrentParamName(paramName) { 
+currentParamName = paramName; 
+} 
+
+function getDoc() { 
+var currentContentWindow = getContentWindow(); 
+return ((currentContentWindow) ? currentContentWindow.document : null); 
+} 
+
+var contentWindow = null; 
+
+function getContentWindow() { 
+if (!currentParamName && !contentWindow) return null; 
+
+if (contentWindow) 
+return contentWindow; 
+else 
+return document.getElementById(getIframeName(currentParamName)).contentWindow; 
+} 
+
+function setContentWindow(newContentWindow) { 
+contentWindow = newContentWindow; 
+} 
+
+function isEditable() { 
+return getDoc() != null; 
+} 
+
+var modes = new Array(); 
+function isModeHtml() { 
+return ((contentWindow != null) || (modes[currentParamName] == 'html')); 
+} 
+
+function setMode(m) { 
+modes[currentParamName] = m; 
+} 
+
+function switchMode() { 
+if (!isEditable()) return; 
+
+if (isModeHtml()) { 
+if (isIE) { 
+var iHTML = getDoc().body.innerHTML; 
+getDoc().body.innerText = iHTML; 
+} else { 
+var html = document.createTextNode(getDoc().body.innerHTML); 
+getDoc().body.innerHTML = ""; 
+getDoc().body.appendChild(html); 
+} 
+document.getElementById(currentParamName + '_controls').style.display = 'none'; 
+setMode('text'); 
+} else { 
+if (isIE) { 
+iText = getDoc().body.innerText; 
+getDoc().body.innerHTML = iText; 
+} else { 
+var html = getDoc().body.ownerDocument.createRange(); 
+html.selectNodeContents(getDoc().body); 
+getDoc().body.innerHTML = html.toString(); 
+} 
+setMode('html'); 
+var displayHtmlBox = document.getElementById('displayHTML_' + currentParamName); 
+if (displayHtmlBox != null) { 
+displayHtmlBox.checked = false; 
+} 
+if (isIE) { 
+document.getElementById(currentParamName + '_controls').style.display = 'block'; 
+} else { 
+document.getElementById(currentParamName + '_controls').style.display = 'table-row'; 
+} 
+} 
+} 
+
+var notEditablePrompt = null; 
+function registerNotEditablePrompt(text) { 
+notEditablePrompt = text; 
+} 
+
+function format(strCommand, strOption) { 
+if (!isEditable()) { 
+if (notEditablePrompt) alert(notEditablePrompt); 
+return; 
+} 
+setSelectionRange(); 
+if (!isModeHtml()) return; 
+if (strOption == 'removeFormat') { 
+strCommand = strOption; 
+strOption = null; 
+} 
+if (strCommand == 'BackColor' && !isIE) { 
+strCommand = 'hilitecolor'; 
+} 
+getDoc().execCommand(strCommand,'',strOption); 
+resetSelectionRange(); 
+getContentWindow().focus(); 
+} 
+
+var selectLinkTextPrompt = "Please select the text that you would like to transform into a link."; 
+
+function createLink(question, prefix) { 
+if (!isEditable()) { 
+if (notEditablePrompt) alert(notEditablePrompt); 
+return; 
+} 
+if (!isModeHtml()) return; 
+setSelectionRange(); 
+if (isIE) { 
+if (currentRange.htmlText) { 
+var h = currentRange.htmlText.toLowerCase(); 
+var s = h.indexOf('<a href="'); 
+var e = h.indexOf('">'); 
+if (s > -1 && e > -1 && e > s) { 
+prefix = currentRange.htmlText.substring(s + 9, e); 
+} 
+} 
+} 
+
+if (currentSelection == 0 || (isIE && currentRange.boundingWidth == 0)) { 
+alert(selectLinkTextPrompt); 
+return; 
+} 
+
+var strLink = prompt(question, prefix); 
+if ((strLink != null) && (strLink != "http://")) { 
+format("CreateLink", strLink); 
+} 
+resetSelectionRange(); 
+getContentWindow().focus(); 
+} 
+
+var currentSelection = null; 
+var currentRange = null; 
+function setSelectionRange() { 
+if (isIE) { 
+getContentWindow().focus(); 
+currentSelection = getDoc().selection; 
+
+if (currentSelection.type != 'Text' && currentSelection.type != 'None') return; 
+
+currentRange = currentSelection.createRange(); 
+
+if (currentRange.parentElement() == window.document.body) { 
+getContentWindow().focus(); 
+currentSelection = getDoc().selection; 
+currentRange = currentSelection.createRange(); 
+} 
+
+} else { 
+currentSelection = getContentWindow().getSelection(); 
+
+if ( currentSelection.rangeCount > 0 ) { 
+currentRange = currentSelection.getRangeAt(0); 
+} else { //Safari doesn't give an empty selection a range 
+currentRange = getContentWindow().document.createRange(); 
+currentRange.setStart(getContentWindow().document.body,currentSelection.anchorOffset); 
+currentRange.setEnd(getContentWindow().document.body,currentSelection.focusOffset); 
+currentSelection.addRange(currentRange); 
+} 
+} 
+} 
+
+function initSelectionRange() { 
+setSelectionRange(); 
+} 
+
+function resetSelectionRange() { 
+currentSelection = null; 
+currentRange = null; 
+} 
+
+function frameVisible() { 
+var color = document.getElementById('colorPicker') != null && document.getElementById('colorPicker').style.visibility == 'visible'; 
+var table = tableFrame != null && tableFrame.style.visibility == 'visible'; 
+return (color || table); 
+} 
+
+var command = ''; 
+function askForColor(buttonObj, commandIdent) { 
+if (!isEditable()) { 
+if (notEditablePrompt) alert(notEditablePrompt); 
+return; 
+} 
+if (!isModeHtml()) return; 
+if (frameVisible()) return; 
+setSelectionRange(); 
+
+document.getElementById('colorPicker').style.left = getObjX(buttonObj) + "px"; 
+document.getElementById('colorPicker').style.top = (getObjY(buttonObj) - 150) + "px" ; 
+
+document.getElementById('colorPicker').style.visibility = "visible"; 
+
+command = commandIdent; 
+} 
+
+function formatColor(color) { 
+if (!isEditable()) return; 
+hideFrame(document.getElementById('colorPicker')); 
+getContentWindow().focus(); 
+if (isIE) currentRange.select(); 
+format(command, color); 
+resetSelectionRange(); 
+} 
+
+
+function isInsertableImage() { 
+return !document.getElementById('imageURL'); 
+} 
+
+function askForImageSecure(buttonObj, e) { 
+askForImage(buttonObj, e, true); 
+} 
+
+function askForImage(buttonObj, e, secure) { 
+
+if (!isEditable() && isInsertableImage() ) { 
+if (notEditablePrompt) alert(notEditablePrompt); 
+return; 
+} 
+if (!isModeHtml()) return; 
+if (frameVisible()) return; 
+
+if (isInsertableImage() ) setSelectionRange(); 
+
+setLastMousePosition(e); 
+openPopup(secure ? secureImageURL : imageURL, 'attach', 450, 450, 'width=450,height=450,scrollbars=yes,toolbar=no,status=no,directories=no,menubar=no,resizable=1', true); 
+} 
+
+function createImage(childForm) { 
+if (!isEditable()) return; 
+if (!isModeHtml()) return; 
+if (frameVisible()) return; 
+
+if (!childForm) { 
+resetSelectionRange(); 
+return; 
+} 
+
+if (isInsertableImage()) { 
+img = getDoc().createElement("img"); 
+img.setAttribute("src", childForm.isrc.value); 
+img.setAttribute("border", childForm.iborder.value); 
+img.setAttribute("align", "left"); 
+img.setAttribute("alt", ""); 
+insertNodeAtSelection(img); 
+resetSelectionRange(); 
+} else { 
+document.getElementById('imageURL').value = '<img alt="" src="'+childForm.isrc.value+'" border='+childForm.iborder.value+' align=left>'; 
+} 
+} 
+
+function createMergeField(mf) { 
+insertTextAtSelection(mf); 
+} 
+
+function insertTextAtSelection(text) { 
+if (!isEditable()) { 
+if (notEditablePrompt) alert(notEditablePrompt); 
+return; 
+} 
+
+if (!isModeHtml()) return; 
+
+getContentWindow().focus(); 
+var textNode = document.createTextNode(text); 
+insertNodeAtSelection(textNode); 
+} 
+
+function askForTable(buttonObj) { 
+if (!isEditable()) return; 
+if (!isModeHtml()) return; 
+if (frameVisible()) return; 
+setSelectionRange(); 
+tableFrame.style.visibility = "visible"; 
+tableFrame.style.left = getObjX(buttonObj) + "px"; 
+tableFrame.style.top = (getObjY(buttonObj) + buttonObj.scrollHeight) + "px"; 
+} 
+
+function createTable(childForm) { 
+if (!childForm) { 
+tableFrame.style.visibility = "hidden"; 
+resetSelectionRange(); 
+return; 
+} 
+if (!isEditable()) return; 
+if (!isModeHtml()) return; 
+table = getDoc().createElement("table"); 
+table.setAttribute("border", childForm.tborder.value); 
+table.setAttribute("cellpadding", childForm.tcellpadding.value); 
+table.setAttribute("cellspacing", childForm.tcellspacing.value); 
+table.setAttribute("bgcolor", childForm.tbgcolor.value); 
+table.setAttribute("width", childForm.twidth.value); 
+var rows = childForm.trows.value; 
+var cols = childForm.tcols.value; 
+
+for (var i=0; i < rows; i++) { 
+tr = getDoc().createElement("tr"); 
+for (var j=0; j < cols; j++) { 
+td = getDoc().createElement("td"); 
+br = getDoc().createElement("br"); 
+td.appendChild(br); 
+tr.appendChild(td); 
+} 
+table.appendChild(tr); 
+} 
+
+
+getContentWindow().focus(); 
+insertNodeAtSelection(table); 
+tableFrame.style.visibility = "hidden"; 
+resetSelectionRange(); 
+
+} 
+
+function insertNodeAtSelection(insertNode) { 
+if (!isEditable()) return; 
+if (isIE) { 
+insertNodeAtSelectionIE(insertNode); 
+} else { 
+insertNodeAtSelectionMozilla(insertNode); 
+} 
+} 
+
+function insertNodeAtSelectionIE(insertNode) { 
+function nodeToHTML(node) { 
+var html = ""; 
+if (node.nodeType == 3) { 
+html = node.data; 
+html = html.replace(/&/ig, "&amp;"); 
+html = html.replace(/</ig, "&lt;"); 
+html = html.replace(/>/ig, "&gt;"); 
+html = html.replace(/\"/ig, "&quot;"); 
+} else if (node.nodeType == 1 && node.tagName.toLowerCase() == 'img') { 
+var tagName = node.tagName.toLowerCase(); 
+html = '<img alt="" src="' + node.getAttribute('src') + '" '; 
+html += ' border="' + node.getAttribute('border') + '" '; 
+html += ' align="' + node.getAttribute('align') + '">'; 
+} else if (node.nodeType == 1 || node.nodeType == 11) { 
+var tagName = node.tagName.toLowerCase(); 
+var separateCloseTagRequired = tagName == "script" || tagName == "style" || tagName == "div" || tagName == "span"; 
+var closeTagOnStart = !node.hasChildNodes() && !separateCloseTagRequired; 
+
+html = "<" + tagName; 
+
+// Go thru all the attributes 
+for (var i = 0; i < node.attributes.length; ++i) { 
+var attribute = node.attributes.item(i); 
+if (!attribute.specified) { continue; } 
+if (attribute.name) { 
+var name = attribute.name.toLowerCase(); 
+var value = attribute.value; 
+if (name == "style") { value = node.style.cssText.toLowerCase(); } 
+html += " " + name + '="' + value + '"'; 
+} 
+} 
+if (closeTagOnStart) { 
+html += " />"; 
+} else { 
+html += ">"; 
+for (var i = node.firstChild; i; i = i.nextSibling) { html += nodeToHTML(i); } 
+html += "</" + tagName + ">"; 
+} 
+} 
+return html; 
+} 
+
+if (!isIE) { return; } 
+
+var sel = getDoc().selection; 
+var range = sel.createRange(); 
+if (currentRange && currentSelection) { 
+currentRange.pasteHTML(nodeToHTML(insertNode)); 
+currentRange.select(); 
+currentRange.collapse(false); 
+} else { 
+range.pasteHTML(nodeToHTML(insertNode)); 
+range.select(); 
+range.collapse(false); 
+} 
+} 
+
+
+function insertNodeAtSelectionMozilla(insertNode) { 
+if (isIE) { return; } 
+var sel = null; 
+var range = null; 
+if (!(currentRange && currentSelection)) 
+setSelectionRange(); 
+
+sel = currentSelection; 
+range = currentRange; 
+
+sel.removeAllRanges(); 
+range.deleteContents(); 
+
+var container = range.startContainer; 
+var pos = range.startOffset; 
+if (container.tagName && container.tagName.toUpperCase() == "HTML"){ 
+for (var i = container.childNodes.length-1; i >= 0; i--){ 
+if (container.childNodes[i].tagName.toUpperCase() == "BODY"){ 
+container = container.childNodes[i]; 
+break; 
+} 
+} 
+} 
+
+range=document.createRange(); 
+
+if (container.nodeType == 3 && insertNode.nodeType == 3) { 
+// if we insert text in a textnode, do optimized insertion 
+container.insertData(pos, insertNode.nodeValue); 
+
+// put cursor after inserted text 
+range.setEnd(container, pos+insertNode.length); 
+range.setStart(container, pos+insertNode.length); 
+} else { 
+var afterNode; 
+if (container.nodeType==3) { 
+
+// when inserting into a textnode 
+// we create 2 new textnodes 
+// and put the insertNode in between 
+
+var textNode = container; 
+container = textNode.parentNode; 
+var text = textNode.nodeValue; 
+
+// text before the split 
+var textBefore = text.substr(0,pos); 
+// text after the split 
+var textAfter = text.substr(pos); 
+
+var beforeNode = document.createTextNode(textBefore); 
+var afterNode = document.createTextNode(textAfter); 
+
+// insert the 3 new nodes before the old one 
+container.insertBefore(afterNode, textNode); 
+container.insertBefore(insertNode, afterNode); 
+container.insertBefore(beforeNode, insertNode); 
+
+// remove the old node 
+container.removeChild(textNode); 
+
+} else { 
+// else simply insert the node 
+afterNode = container.childNodes[pos]; 
+container.insertBefore(insertNode, afterNode); 
+} 
+
+range.collapse(false); 
+} 
+}; 
+
+function hideFrame(obj) { 
+obj.style.visibility = 'hidden'; 
+} 
+</script>
+
+</apex:form>
+</apex:page>

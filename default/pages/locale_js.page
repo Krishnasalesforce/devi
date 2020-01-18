@@ -1,0 +1,122 @@
+<!-- <apex:page>
+   Begin Default Content REMOVE THIS 
+  <h1>Congratulations</h1>
+  This is your new Page
+   End Default Content REMOVE THIS 
+</apex:page> -->
+
+
+<apex:page >
+<apex:form >
+
+<script language="JavaScript" type="text/javascript"> 
+<!-- 
+var user = sforce.connection.getUserInfo(); //get information about the running user 
+var locale = user.userLocale; //assign the locale of the user to its own variable 
+var dateFormat; //holds the users date formatting requirement 
+window.sfdcPage = new EditPage(); 
+if (locale == "sl_SI") { //if the locale is Slovenian (Slovenia) 
+UserContext.initialize({'locale':'sl_SI','today':'{!NOW()}','dateTimeFormat':'d.M.y H:mm','ampm':['AM','PM'],'dateFormat':'d.M.y','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "d.M.y"; 
+} else if (locale == "cs" || locale == "cs_CZ" || locale == "fi" || locale == "fi_FI" || locale == "fi_FI_EURO" || locale == "sk_SK") { //if the locale is Czech, Czech (Czech Republic), Finnish, Finnish (Finland), Finnish (Finland,Euro), or Slovak (Slovakia) 
+UserContext.initialize({'locale':'sk_SK','today':'{!NOW()}','dateTimeFormat':'d.M.yyyy H:mm','ampm':['AM','PM'],'dateFormat':'d.M.yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "d.M.yyyy"; 
+} else if (locale == "is_IS") { //if the locale is Icelandic (Iceland) 
+UserContext.initialize({'locale':'is_IS','today':'{!NOW()}','dateTimeFormat':'d.M.yyyy HH:mm','ampm':['AM','PM'],'dateFormat':'d.M.yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "d.M.yyyy"; 
+} else if (locale == "et_EE") { //if the locale is Estonian (Estonia) 
+UserContext.initialize({'locale':'et_EE','today':'{!NOW()}','dateTimeFormat':'d.MM.yyyy H:mm','ampm':['AM','PM'],'dateFormat':'d.MM.yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "d.MM.yyyy"; 
+} else if (locale == "el_GR") { //if the locale is Greek (Greece) 
+UserContext.initialize({'locale':'el_GR','today':'{!NOW()}','dateTimeFormat':'d/M/yyyy h:mm a','ampm':['AM','PM'],'dateFormat':'d/M/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "d/M/yyyy"; 
+} else if (locale == "th_TH") { //if the locale is Thai (Thailand) 
+UserContext.initialize({'locale':'th_TH','today':'{!NOW()}','dateTimeFormat':'d/M/yyyy, H:mm ?.','ampm':['AM','PM'],'dateFormat':'d/M/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "d/M/yyyy"; 
+} else if (locale == "nl_BE" || locale == "fr_BE" || locale == "es" || locale == "es_ES_EURO" || locale == "es_ES") { //if the locale is Dutch (Belgium), French (Belgium), Spanish, Spanish (Spain,Euro) or Spanish (Spain) 
+UserContext.initialize({'locale':'es_ES','today':'{!NOW()}','dateTimeFormat':'d/MM/yyyy H:mm','ampm':['AM','PM'],'dateFormat':'d/MM/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "d/MM/yyyy"; 
+} else if (locale == "en_AU" || locale == "en_NZ") { //if the locale is English (Australia) or English (New Zealand) 
+UserContext.initialize({'locale':'en_NZ','today':'{!NOW()}','dateTimeFormat':'d/MM/yyyy HH:mm','ampm':['AM','PM'],'dateFormat':'d/MM/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "d/MM/yyyy"; 
+} else if (locale == "es_CO" || locale == "es_GT" || locale == "es_MX") { //if the locale is Spanish (Colombia), Spanish (Guatemala) or Spanish (Mexico) 
+UserContext.initialize({'locale':'es_MX','today':'{!NOW()}','dateTimeFormat':'d/MM/yyyy hh:mm a','ampm':['AM','PM'],'dateFormat':'d/MM/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "d/MM/yyyy"; 
+} else if (locale == "ru") { //if the locale is Russian 
+UserContext.initialize({'locale':'ru','today':'{!NOW()}','dateTimeFormat':'dd.MM.yyyy H:mm','ampm':['AM','PM'],'dateFormat':'dd.MM.yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "dd.MM.yyyy"; 
+} else if (locale == "fr_CH" || locale == "de" || locale == "de_AT" || locale == "de_AT_EURO" || locale == "de_DE" || locale == "de_DE_EURO" || locale == "de_LU" || locale == "de_LU_EURO" || locale == "de_CH" || locale == "it_CH" || locale == "no" || locale == "no_NO" || locale == "ro_RO" || locale == "tr") { //French (Switzerland), German, German (Austria), German (Austria,Euro), German (Germany), German (Germany,Euro), German (Luxembourg), German (Luxembourg,Euro), German (Switzerland), Italian (Switzerland), Norwegian, Norwegian (Norway), Romanian (Romania) or Turkish 
+UserContext.initialize({'locale':'tr','today':'{!NOW()}','dateTimeFormat':'dd.MM.yyyy HH:mm','ampm':['AM','PM'],'dateFormat':'dd.MM.yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "dd.MM.yyyy"; 
+} else if (locale == "it" || locale == "it_IT") { //if the locale is Italian or Italian (Italy) 
+UserContext.initialize({'locale':'it_IT','today':'{!NOW()}','dateTimeFormat':'dd/MM/yyyy H.mm','ampm':['AM','PM'],'dateFormat':'dd/MM/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "dd/MM/yyyy"; 
+} else if (locale == "en_CA" || locale == "ms_MY") { //if the locale is English (Canada) or Malay (Malaysia) 
+UserContext.initialize({'locale':'ms_MY','today':'{!NOW()}','dateTimeFormat':'dd/MM/yyyy h:mm a','ampm':['AM','PM'],'dateFormat':'dd/MM/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "dd/MM/yyyy"; 
+} else if (locale == "ca" || locale == "ca_ES" || locale == "ca_ES_EURO" || locale == "en_IE" || locale == "en_IE_EURO" || locale == "en_GB" || locale == "fr" || locale == "fr_FR" || locale == "fr_FR_EURO" || locale == "fr_LU" || locale == "fr_MC" || locale == "pt_BR" || locale == "es_AR") { //if the locale is Catalan, Catalan (Spain), Catalan (Spain,Euro), English (Ireland), English (Ireland,Euro), English (United Kingdom), French, French (France), French (France,Euro), French (Luxembourg), French (Monaco), Portuguese (Brazil) or Spanish (Argentina) 
+UserContext.initialize({'locale':'es_AR','today':'{!NOW()}','dateTimeFormat':'dd/MM/yyyy HH:mm','ampm':['AM','PM'],'dateFormat':'dd/MM/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "dd/MM/yyyy"; 
+} else if (locale == "ar" || locale == "ar_BH" || locale == "ar_JO" || locale == "ar_KW" || locale == "ar_LB" || locale == "ar_SA" || locale == "ar_AE" || locale == "es_CR" || locale == "es_EC" || locale == "es_PY" || locale == "es_PE" || locale == "es_UY" || locale == "es_VE") { //if the locale is Arabic, Arabic (Bahrain), Arabic (Jordan), Arabic (Kuwait), Arabic (Lebanon), Arabic (Saudi Arabia), Arabic (United Arab Emirates), Spanish (Costa Rica), Spanish (Ecuador), Spanish (Paraguay), Spanish (Peru), Spanish (Uruguay) or Spanish (Venezuela) 
+UserContext.initialize({'locale':'es_VE','today':'{!NOW()}','dateTimeFormat':'dd/MM/yyyy hh:mm a','ampm':['AM','PM'],'dateFormat':'dd/MM/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "dd/MM/yyyy"; 
+} else if (locale == "iw" || locale == "iw_IL" || locale == "vi_VN") { //if the locale is Hebrew, Hebrew (Israel) or Vietnamese (Vietnam) 
+UserContext.initialize({'locale':'vi_VN','today':'{!NOW()}','dateTimeFormat':'HH:mm dd/MM/yyyy','ampm':['AM','PM'],'dateFormat':'dd/MM/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "dd/MM/yyyy"; 
+} else if (locale == "pt" || locale == "pt_AO" || locale == "pt_PT") { //if the locale is Portuguese, Portuguese (Angola) or Portuguese (Portugal) 
+UserContext.initialize({'locale':'pt_PT','today':'{!NOW()}','dateTimeFormat':'dd-MM-yyyy H:mm','ampm':['AM','PM'],'dateFormat':'dd-MM-yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "dd-MM-yyyy"; 
+} else if (locale == "da" || locale == "da_DK") { //if the locale is Danish or Danish (Denmark) 
+UserContext.initialize({'locale':'da_DK','today':'{!NOW()}','dateTimeFormat':'dd-MM-yyyy HH:mm','ampm':['AM','PM'],'dateFormat':'dd-MM-yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "dd-MM-yyyy"; 
+} else if (locale == "es_BO" || locale == "es_CL") { //if the locale is Spanish (Bolivia) or Spanish (Chile) 
+UserContext.initialize({'locale':'es_CL','today':'{!NOW()}','dateTimeFormat':'dd-MM-yyyy hh:mm a','ampm':['AM','PM'],'dateFormat':'dd-MM-yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "dd-MM-yyyy"; 
+} else if (locale == "nl" || locale == "nl_NL" || locale == "nl_SR") { //if the locale is Dutch, Dutch (Netherlands) or Dutch (Suriname) 
+UserContext.initialize({'locale':'nl_SR','today':'{!NOW()}','dateTimeFormat':'d-M-yyyy H:mm','ampm':['AM','PM'],'dateFormat':'d-M-yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "d-M-yyyy"; 
+} else if (locale == "es_SV" || locale == "es_HN" || locale == "es_PR") { //if the locale is Spanish (El Salvador), Spanish (Honduras) or Spanish (Puerto Rico) 
+UserContext.initialize({'locale':'es_PR','today':'{!NOW()}','dateTimeFormat':'MM-dd-yyyy hh:mm a','ampm':['AM','PM'],'dateFormat':'MM-dd-yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "MM-dd-yyyy"; 
+} else if (locale == "ko" || locale == "ko_KR") { //if the locale is Korean or Korean (South Korea) 
+UserContext.initialize({'locale':'ko_KR','today':'{!NOW()}','dateTimeFormat':'yyyy. M. d a h:mm','ampm':['AM','PM'],'dateFormat':'yyyy. M. d','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy. M. d"; 
+} else if (locale == "lv_LV") { //if the locale is Latvian (Latvia) 
+UserContext.initialize({'locale':'lv_LV','today':'{!NOW()}','dateTimeFormat':'yyyy.d.M HH:mm','ampm':['AM','PM'],'dateFormat':'yyyy.d.M','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy.d.M"; 
+} else if (locale == "lt_LT") { //if the locale is Lithuanian (Lithuania) 
+UserContext.initialize({'locale':'lt_LT','today':'{!NOW()}','dateTimeFormat':'yyyy.M.d HH.mm','ampm':['AM','PM'],'dateFormat':'yyyy.M.d','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy.M.d"; 
+} else if (locale == "hr_HR") { //if the locale is Croatian (Croatia) 
+UserContext.initialize({'locale':'hr_HR','today':'{!NOW()}','dateTimeFormat':'yyyy.MM.dd HH:mm','ampm':['AM','PM'],'dateFormat':'yyyy.MM.dd','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy.MM.dd"; 
+} else if (locale == "hu") { //if the locale is Hungarian 
+UserContext.initialize({'locale':'hu','today':'{!NOW()}','dateTimeFormat':'yyyy.MM.dd. H:mm','ampm':['AM','PM'],'dateFormat':'yyyy.MM.dd.','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy.MM.dd."; 
+} else if (locale == "zh_TW") { //if the locale is Chinese (Taiwan) 
+UserContext.initialize({'locale':'zh_TW','today':'{!NOW()}','dateTimeFormat':'yyyy/M/d a h:mm','ampm':['AM','PM'],'dateFormat':'yyyy/M/d','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy/M/d"; 
+} else if (locale == "ja" || locale == "ja_JP") { //if the locale is Japanese or Japanese (Japan) 
+UserContext.initialize({'locale':'ja_JP','today':'{!NOW()}','dateTimeFormat':'yyyy/MM/dd H:mm','ampm':['AM','PM'],'dateFormat':'yyyy/MM/dd','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy/MM/dd"; 
+} else if (locale == "en_ZA") { //if the locale is English (South Africa) 
+UserContext.initialize({'locale':'en_ZA','today':'{!NOW()}','dateTimeFormat':'yyyy/MM/dd hh:mm a','ampm':['AM','PM'],'dateFormat':'yyyy/MM/dd','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy/MM/dd"; 
+} else if (locale == "zh_HK" || locale == "zh" || locale == "zh_CN") { //if the locale is Chinese (Hong Kong), Chinese or Chinese (China) 
+UserContext.initialize({'locale':'zh_CN','today':'{!NOW()}','dateTimeFormat':'yyyy-M-d ah:mm','ampm':['AM','PM'],'dateFormat':'yyyy-M-d','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy-M-d"; 
+} else if (locale == "bg_BG") { //if the locale is Bulgarian (Bulgaria) 
+UserContext.initialize({'locale':'bg_BG','today':'{!NOW()}','dateTimeFormat':'yyyy-M-d H:mm','ampm':['AM','PM'],'dateFormat':'yyyy-M-d','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy-M-d"; 
+} else if (locale == "fr_CA" || locale == "pl" || locale == "sv" || locale == "sv_SE") { //if the locale is French (Canada), Polish, Swedish or Swedish (Sweden) 
+UserContext.initialize({'locale':'sv_SE','today':'{!NOW()}','dateTimeFormat':'yyyy-MM-dd HH:mm','ampm':['AM','PM'],'dateFormat':'yyyy-MM-dd','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "yyyy-MM-dd"; 
+} else { //otherwise the locale is Armenian (Armenia) [hy_AM], English (Barbados) [en_B], English (Bermuda) [en_BM], English (Ghana) [en_GH], English (Indonesia) [en_ID], English (Singapore) [en_SG], English (United States) [en_US], Kazakh (Kazakhstan) [kk_KZ], Khmer (Cambodia) [km_KH], Thai [th] or Urdu (Pakistan) [ur_PK] 
+UserContext.initialize({'locale':'en_US','today':'{!NOW()}','dateTimeFormat':'M/d/yyyy h:mm a','ampm':['AM','PM'],'dateFormat':'M/d/yyyy','startOfWeek':'1','isAccessibleMode':false,'language':'en_US'}); 
+dateFormat = "M/d/yyyy"; 
+} 
+//--> 
+</script>
+
+</apex:form>
+</apex:page>

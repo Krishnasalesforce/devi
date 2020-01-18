@@ -1,0 +1,33 @@
+<apex:page sidebar="false" id="page">
+    <apex:includeScript value="{!URLFOR($Resource.JQueryMap, 'USMapScripts/Scripts/jquery.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.JQueryMap, 'USMapScripts/Scripts/jquery.usmap.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.JQueryMap, 'USMapScripts/Scripts/raphael.js')}"/>
+    
+    <script type="text/javascript"> 
+        //var $j = jQuery.noConflict(); 
+        j$= jQuery.noConflict();
+        if(j$) {
+         alert('jQuery Loaded'); 
+        } else { 
+        alert('jQuery Not Loaded'); 
+        }
+        j$(document).ready(function() {
+            j$('#map').usmap({});
+            
+        });
+        j$('#map').usmap({
+            stateStyles: { fill: 'blue' }
+        });
+    </script>
+    <table>
+        <tr>
+            <td>
+                <div id="map"  style="width: 300px; height: 300px;"></div>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+</apex:page>

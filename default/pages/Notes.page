@@ -1,0 +1,11 @@
+<apex:page controller="Notes">
+    <apex:sectionHeader title="Notes"/>
+    <apex:form >
+        <apex:pageBlock mode="maindetail" title="Note Edit">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Save" action="{!Save}"/>
+                <apex:commandButton value="Cancel" action="{!Cancel}"/>                
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
